@@ -1,5 +1,5 @@
 const inquirer = require('inquirer');
-const db = require('./db/queries'); // Ensure this file exports the required functions
+const db = require('./db/queries');
 
 const mainMenu = async () => {
   try {
@@ -21,27 +21,19 @@ const mainMenu = async () => {
       },
     ]);
 
-    console.log(`Selected action: ${action}`);
-
     switch (action) {
       case 'View all departments':
         const departments = await db.getDepartments();
-        console.log('Departments:', departments);
         console.table(departments);
         break;
-
       case 'View all roles':
         const roles = await db.getRoles();
-        console.log('Roles:', roles);
         console.table(roles);
         break;
-
       case 'View all employees':
         const employees = await db.getEmployees();
-        console.log('Employees:', employees);
         console.table(employees);
         break;
-
       case 'Add a department':
         const { deptName } = await inquirer.prompt([
           {
@@ -53,10 +45,8 @@ const mainMenu = async () => {
         await db.addDepartment(deptName);
         console.log(`Added department ${deptName}`);
         break;
-
       case 'Add a role':
         const departmentsForRole = await db.getDepartments();
-        console.log('Departments for role:', departmentsForRole);
         const { roleName, roleSalary, roleDept } = await inquirer.prompt([
           {
             type: 'input',
@@ -78,12 +68,9 @@ const mainMenu = async () => {
         await db.addRole(roleName, roleSalary, roleDept);
         console.log(`Added role ${roleName}`);
         break;
-
       case 'Add an employee':
         const rolesForEmployee = await db.getRoles();
         const employeesForManager = await db.getEmployees();
-        console.log('Roles for employee:', rolesForEmployee);
-        console.log('Employees for manager:', employeesForManager);
         const { firstName, lastName, empRole, empManager } = await inquirer.prompt([
           {
             type: 'input',
@@ -111,12 +98,9 @@ const mainMenu = async () => {
         await db.addEmployee(firstName, lastName, empRole, empManager);
         console.log(`Added employee ${firstName} ${lastName}`);
         break;
-
       case 'Update an employee role':
         const employeesToUpdate = await db.getEmployees();
         const rolesToUpdate = await db.getRoles();
-        console.log('Employees to update:', employeesToUpdate);
-        console.log('Roles to update:', rolesToUpdate);
         const { empToUpdate, newRole } = await inquirer.prompt([
           {
             type: 'list',
@@ -134,9 +118,7 @@ const mainMenu = async () => {
         await db.updateEmployeeRole(empToUpdate, newRole);
         console.log(`Updated employee's role`);
         break;
-
       case 'Exit':
-        console.log('Exiting...');
         process.exit();
     }
 
